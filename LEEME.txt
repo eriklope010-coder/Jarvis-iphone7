@@ -1,0 +1,11 @@
+JARVIS iPhone 3 — Voz a voz y más comandos
+
+1. Descomprime este ZIP.
+2. Sube los archivos a la raíz del repositorio Jarvis-iphone3 y reemplaza los anteriores.
+3. Pulsa Commit changes y espera a que GitHub Pages publique.
+4. En Safari abre JARVIS y pulsa “Empezar conversación” para conceder permiso de micrófono.
+
+Comandos incluidos: hora, fecha, día, chistes, motivación, conversación de apoyo, ayuda/comandos, búsqueda web y abrir Spotify, YouTube, WhatsApp, TikTok, Instagram, ChatGPT, Google Maps, X, Plex y Riot Mobile. Puedes escribirlos o decirlos por voz.
+
+Limitaciones: esta versión usa respuestas locales predefinidas, no una IA online completa. iOS/Safari puede detener el micrófono cuando la app pasa a segundo plano o se abre otra aplicación. Los enlaces de apps pueden mostrar la confirmación de Safari.
+\n\nModo llamada: botón para entrar en una interfaz de voz a voz, cambiar el fondo y conservar el orbe dorado. Las respuestas escritas se ocultan durante la llamada. Safari puede interrumpir el micrófono por restricciones de iOS; mantén la página abierta.\n

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
+<link rel="manifest" href="manifest.webmanifest">
+<title>JARVIS iPhone Gold — Tu compañero</title>
+<style>
+:root{--bg:#000;--panel:#090909;--gold:#b49a58;--gold-soft:#8d7848;--rgb1:#ff4d6d;--rgb2:#48e0c1;--rgb3:#8b6cff;--text:#eee9dc;--muted:#a39d8e}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#000;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(transparent 96%,rgba(180,154,88,.025) 97%),linear-gradient(90deg,transparent 96%,rgba(180,154,88,.018) 97%);background-size:100% 5px,5px 100%;z-index:-1}
+.wrap{max-width:720px;margin:auto;padding:env(safe-area-inset-top) 18px calc(24px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 2px 12px}.brand{letter-spacing:.24em;font-weight:800;font-size:1.2rem}.brand span{color:var(--gold);text-shadow:0 0 8px #b49a5833}.status{font-size:.72rem;color:var(--gold);border:1px solid #b49a5855;border-radius:99px;padding:7px 10px}
+.hero{text-align:center;padding:22px 0 24px}.orb{width:174px;height:174px;margin:8px auto 18px;border-radius:50%;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 16px #8b6cff22)}
+.orb:before,.orb:after{content:"";position:absolute;border-radius:50%;inset:0;border:2px solid transparent;border-top-color:var(--gold);border-bottom-color:#f2df9b;animation:spin 7s linear infinite}
+.orb:after{inset:13px;border-top-color:#f2df9b;border-bottom-color:var(--gold);animation-direction:reverse;animation-duration:4s}
+.core{width:100px;height:100px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1b8,#c7a54e 45%,#6b4d14 75%,#241a07);box-shadow:inset 0 0 18px #ffffff55,0 0 24px #b49a5855;position:relative}
+.core:after{content:"";position:absolute;inset:19px;border:1px solid #ffffff88;border-radius:50%}
+@keyframes spin{to{transform:rotate(360deg)}}.orb.listening{animation:pulse 1.2s ease-in-out infinite}.orb.listening:before{border-width:4px;filter:drop-shadow(0 0 8px var(--rgb2))}
+@keyframes pulse{50%{transform:scale(1.04)}}
+h1{font-size:1.7rem;margin:0 0 8px;letter-spacing:.12em} .subtitle{color:var(--muted);font-size:.94rem;margin:0 auto;max-width:440px;line-height:1.5}
+.panel{background:var(--panel);border:1px solid #6c8cff30;border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 10px 35px #0003;backdrop-filter:blur(14px)}
+.panel-title{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;letter-spacing:.13em;color:var(--gold);margin-bottom:12px}
+#conversation{height:150px;overflow:auto;display:flex;flex-direction:column;gap:10px}.bubble{padding:10px 12px;border-radius:13px;line-height:1.4;font-size:.93rem;max-width:92%;white-space:pre-wrap;overflow-wrap:anywhere}.jarvis{align-self:flex-start;background:#11100c;border:1px solid #b49a5840}.user{align-self:flex-end;background:#19160f;border:1px solid #b49a5840}
+.controls{display:flex;gap:9px}.controls input{min-width:0;flex:1}.field{width:100%;border:1px solid #8d784855;border-radius:13px;background:#080808;color:var(--text);padding:13px;font:inherit;outline:none}.field:focus{border-color:var(--gold);box-shadow:0 0 0 2px #b49a581c}
+button,.app{border:1px solid #8d784877;color:var(--text);background:linear-gradient(135deg,#17150f,#0b0b0b);border-radius:13px;padding:12px 14px;font:inherit;cursor:pointer;transition:.2s}button:active,.app:active{transform:scale(.97)}button.primary{background:linear-gradient(120deg,#75613a,#40351f);border-color:#a58c50;color:#fff8e7}.voice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.voice-row button{min-height:48px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.app{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;text-decoration:none;min-height:84px;text-align:center;font-size:.82rem;border-color:#8d784855;color:#d3bd82;background:#0b0b0b}.app b{font-size:1.45rem;color:#b49a58}.note{color:var(--muted);font-size:.78rem;line-height:1.5;margin:12px 2px 0}.pill{font-size:.72rem;color:var(--gold-soft)}.footer{text-align:center;color:#71809d;font-size:.72rem;padding:20px 0}
+@media(min-width:560px){.grid{grid-template-columns:repeat(6,1fr)}.orb{width:190px;height:190px}.core{width:110px;height:110px}}
+
+body.call-mode{background:radial-gradient(ellipse at 50% 35%,#1b1609 0%,#070707 42%,#000 75%);transition:background .5s}
+body.call-mode .hero .subtitle,body.call-mode .panel:not(.call-panel),body.call-mode header .brand{opacity:.15;transition:opacity .3s}
+.call-panel{display:block;text-align:center;padding:24px 18px}
+body.call-mode .call-panel{display:block}
+body.call-mode .hero h1{font-size:1rem;letter-spacing:.2em}
+body.call-mode .hero .subtitle{display:none}
+.call-orb-label{font-size:.78rem;letter-spacing:.18em;color:var(--gold);margin:12px 0}
+.call-status{color:#d6c28b;font-size:.9rem;min-height:24px}
+.call-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.call-actions button{min-width:130px}
+#conversation,#chatForm{display:none}
+body.call-mode .footer{display:none}
+@keyframes goldPulse{0%,100%{box-shadow:0 0 20px #b49a5833,0 0 55px #b49a5810}50%{box-shadow:0 0 35px #b49a5880,0 0 90px #b49a5825}}
+body.call-mode .orb{animation:goldPulse 2.8s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">J<span>A</span>RVIS<span>.</span></div><div class="status" id="status">● EN ESPERA</div></header>
+<section class="hero">
+  <div class="orb" id="orb"><div class="core"></div></div>
+  <h1>AQUÍ ESTOY, AMIGO</h1>
+  <p class="subtitle">Tu compañero personal: habla conmigo, cuéntame qué te pasa o pide ayuda. Siempre con respeto, cercanía y sinceridad.</p>
+</section>
+<section class="panel call-panel" id="callPanel">
+ <div class="call-orb-label">JARVIS · LLAMADA DE VOZ</div>
+ <div class="call-status" id="callStatus">Pulsa para iniciar la conversación</div>
+ <div class="call-actions"><button id="startCall" class="primary">📞 Empezar llamada</button><button id="endCall">🔴 Colgar</button></div>
+ <button id="testVoice" style="margin-top:12px;width:100%">🔊 Probar voz</button>
+ <button id="changeBg" style="margin-top:8px;width:100%">🌌 Cambiar fondo</button>
+</section>
+<section class="panel">
+ <div class="panel-title"><span>HABLA CON JARVIS · VOZ A VOZ</span><span class="pill">CONVERSACIÓN</span></div>
+ <div id="conversation" aria-live="polite"></div>
+ <form id="chatForm" class="controls"><input id="command" class="field" autocomplete="off" placeholder="Cuéntame algo o pregúntame…" aria-label="Escribe un comando"><button class="primary" type="submit">Enviar</button></form>
+ <div class="voice-row"><button id="listen" class="primary">🎙️ Empezar conversación</button><button id="stop">🔇 Terminar conversación</button></div><p class="note">Pulsa “Empezar conversación” y habla. JARVIS responderá en voz alta e intentará volver a escucharte. En iPhone, mantén esta pantalla abierta.</p>
+</section>
+
+<section class="panel">
+ <div class="panel-title"><span>AYUDA Y BÚSQUEDA</span><span class="pill">HERRAMIENTAS WEB</span></div>
+ <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+  <button id="weather">🌦️ Consultar tiempo</button><button id="webSearch">🔎 Buscar en la web</button>
+ </div>
+</section>
+<section class="panel">
+ <div class="panel-title"><span>ACCESOS RÁPIDOS</span><span class="pill">TUS APPS</span></div>
+ <div class="grid">
+  <a class="app" href="spotify://" target="_blank" rel="noopener"><b>♫</b>Spotify</a>
+  <a class="app" href="youtube://" target="_blank" rel="noopener"><b>▶</b>YouTube</a>
+  <a class="app" href="whatsapp://" target="_blank" rel="noopener"><b>✉</b>WhatsApp</a>
+  <a class="app" href="snssdk1233://" target="_blank" rel="noopener"><b>♪</b>TikTok</a>
+  <a class="app" href="instagram://" target="_blank" rel="noopener"><b>◎</b>Instagram</a>
+  <a class="app" href="chatgpt://" target="_blank" rel="noopener"><b>✳</b>ChatGPT</a>
+  <a class="app" href="comgooglemaps://" target="_blank" rel="noopener"><b>📍</b>Maps</a>
+  <a class="app" href="twitter://" target="_blank" rel="noopener"><b>𝕏</b>X</a>
+  <a class="app" href="plex://" target="_blank" rel="noopener"><b>▶</b>Plex</a>
+  <a class="app" href="riotmobile://" target="_blank" rel="noopener"><b>⚔</b>Riot Mobile</a>
+ </div>
+</section>
+<div class="footer">JARVIS · Interfaz experimental · Hecho para iPhone</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const conversation=$('conversation');
+let callMode=false,currentBg=0;
+const callBackgrounds=['radial-gradient(ellipse at 50% 35%,#1b1609 0%,#070707 42%,#000 75%)','radial-gradient(ellipse at 50% 30%,#10201e 0%,#070909 42%,#000 75%)','radial-gradient(ellipse at 50% 35%,#191027 0%,#08070b 42%,#000 75%)'];
+function setCallStatus(t){const e=$('callStatus');if(e)e.textContent=t;}
+$('changeBg').addEventListener('click',()=>{currentBg=(currentBg+1)%callBackgrounds.length;document.body.style.background=callBackgrounds[currentBg];document.body.classList.add('call-mode');});
+
+function addBubble(text,who='jarvis'){if(callMode)return;const b=document.createElement('div');b.className='bubble '+who;b.textContent=text;conversation.appendChild(b);conversation.scrollTop=conversation.scrollHeight;}
+function speak(text){
+ const msg=String(text||'').trim();
+ if(!msg)return;
+ if(callMode)setCallStatus('JARVIS está hablando…');
+ if(!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)){
+   if(callMode)setCallStatus('La voz no está disponible en este Safari.');
+   return;
+ }
+ try{
+   const synth=window.speechSynthesis;
+   synth.cancel();
+   const utterance=new SpeechSynthesisUtterance(msg);
+   utterance.lang='es-ES'; utterance.rate=0.92; utterance.pitch=0.88; utterance.volume=1;
+   const chooseVoice=()=>{
+     const voices=synth.getVoices()||[];
+     return voices.find(v=>/^es(-|_)?ES/i.test(v.lang) && /premium|enhanced|monica|jorge|paulina/i.test(v.name))
+       || voices.find(v=>/^es(-|_)?ES/i.test(v.lang))
+       || voices.find(v=>/^es/i.test(v.lang)) || null;
+   };
+   const voice=chooseVoice(); if(voice)utterance.voice=voice;
+   utterance.onstart=()=>{if(callMode)setCallStatus('JARVIS está hablando…');};
+   utterance.onend=()=>{if(callMode)setCallStatus('Te escucho…');if(listening)scheduleRecognitionRestart(900);};
+   utterance.onerror=()=>{if(callMode)setCallStatus('No se pudo reproducir la voz. Toca “Probar voz” y comprueba el volumen.');if(listening)scheduleRecognitionRestart(900);};
+   // iOS Safari can leave speech paused; resume after queueing and retry once if needed.
+   synth.speak(utterance);
+   setTimeout(()=>{try{if(synth.paused)synth.resume();}catch(e){}},250);
+ }catch(e){if(callMode)setCallStatus('No se pudo iniciar la voz en Safari.');}
+}
+
+function answer(raw){
+ const q=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();let r='',appUrl='';
+ if(!q)return;
+ // App commands are checked first so phrases like “Jarvis, abre Instagram” work by voice or text.
+ const openIntent=/\b(abr(e|ir)|abre|abreme|inicia|iniciar|lanza|abrir|pon|ponme|ejecuta|abre la app|abre la aplicacion)\b/.test(q);
+ if(/\b(spotify|musica|music)\b/.test(q)&&openIntent){r='Abriendo Spotify.';appUrl='spotify://';}
+ else if(/\b(youtube|youtube music)\b/.test(q)&&openIntent){r='Abriendo YouTube.';appUrl='youtube://';}
+ else if(/\b(whatsapp|guasap)\b/.test(q)&&openIntent){r='Abriendo WhatsApp.';appUrl='whatsapp://';}
+ else if(/\b(tiktok|tik tok)\b/.test(q)&&openIntent){r='Abriendo TikTok.';appUrl='snssdk1233://';}
+ else if(/\b(instagram|insta)\b/.test(q)&&openIntent){r='Abriendo Instagram.';appUrl='instagram://';}
+ else if(/\b(chatgpt|chat gpt)\b/.test(q)&&openIntent){r='Abriendo ChatGPT.';appUrl='chatgpt://';}
+ else if(/\b(google maps|maps|mapas)\b/.test(q)&&openIntent){r='Abriendo Google Maps.';appUrl='comgooglemaps://';}
+ else if(/\b(x|twitter)\b/.test(q)&&openIntent){r='Abriendo X.';appUrl='twitter://';}
+ else if(/\bplex\b/.test(q)&&openIntent){r='Abriendo Plex.';appUrl='plex://';}
+ else if(/\b(riot|riot mobile)\b/.test(q)&&openIntent){r='Abriendo Riot Mobile.';appUrl='riotmobile://';}
+ else if(/\b(hola|buenas|hey|buenos dias|buenas tardes|buenas noches)\b/.test(q))r='¡Ey! Aquí estoy, amigo. Te escucho. ¿Qué te apetece hacer?';
+ else if(q.includes('como estas')||q.includes('que tal'))r='Todo en orden por aquí. Gracias por preguntar. ¿Y tú, cómo vas?';
+ else if(q.includes('quien eres')||q.includes('tu nombre'))r='Soy JARVIS, tu compañero digital. Puedo charlar contigo, responder algunas preguntas y ayudarte con comandos. Esta versión todavía no está conectada a una inteligencia artificial online.';
+ else if(q.includes('hora'))r='Son las '+new Intl.DateTimeFormat('es-ES',{hour:'2-digit',minute:'2-digit'}).format(new Date())+'.';
+ else if(q.includes('fecha')||q.includes('que dia'))r='Hoy es '+new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long'}).format(new Date())+'.';
+ else if(q.includes('dia de la semana'))r='Hoy es '+new Intl.DateTimeFormat('es-ES',{weekday:'long'}).format(new Date())+'.';
+ else if(q.includes('cuenta un chiste')||q.includes('hazme reir')||q.includes('chiste'))r='¿Qué hace una abeja en el gimnasio? ¡Zum-ba!';
+ else if(q.includes('motivame')||q.includes('motivacion'))r='No tienes que resolverlo todo hoy. Da un pequeño paso, y después otro. Eso también es avanzar.';
+ else if(q.includes('estoy triste')||q.includes('me siento mal')||q.includes('estoy mal')||q.includes('dia horrible')||q.includes('ansioso')||q.includes('ansiedad'))r='Siento que estés pasando por un momento difícil, amigo. Te escucho sin juzgarte. Si te apetece, cuéntame qué ha pasado y lo ordenamos poco a poco.';
+ else if(q.includes('enfadado')||q.includes('agobiado')||q.includes('estresado')||q.includes('preocupado'))r='Te escucho, amigo. Respiremos un momento. ¿Qué es lo que más te preocupa ahora mismo? Podemos pensar juntos en el siguiente paso.';
+ else if(q.includes('consejo')||q.includes('que hago')||q.includes('no se que hacer'))r='Vamos a pensarlo juntos, sin presión. Cuéntame qué ha pasado y qué opciones tienes. Podemos valorar los pros y los contras.';
+ else if(q.includes('aburrido')||q.includes('aburrida'))r='¡Vamos a cambiar eso! Podemos buscar música, una película, un juego o simplemente charlar. ¿Qué te apetece?';
+ else if(q.includes('gracias'))r='¡De nada, amigo! Me alegra poder ayudarte.';
+ else if(q.includes('comandos')||q.includes('que puedes hacer')||q.includes('ayuda'))r='Puedes pedirme la hora o la fecha, decirme hola, pedirme un chiste o un consejo, contarme cómo te sientes, buscar en la web o abrir Spotify, YouTube, WhatsApp, TikTok, Instagram, ChatGPT, Maps, X, Plex y Riot Mobile. Prueba diciendo: Jarvis, abre YouTube.';
+ else if(q.startsWith('busca ')||q.startsWith('buscar ')||q.includes('busca en google')||q.includes('busca en la web')){r='Voy a buscarlo en la web.';appUrl='https://www.google.com/search?q='+encodeURIComponent(raw.replace(/^(jarvis[, ]*)?(busca|buscar)( en la web| en google)?/i,'').trim()||raw);}
+ else if(q.includes('tiempo')||q.includes('clima')){r='Abro la previsión del tiempo. Puedes añadir el nombre de una ciudad.';appUrl='https://www.google.com/search?q='+encodeURIComponent(raw);}
+ else r='Te escucho, amigo. Esta versión todavía funciona con respuestas locales y comandos predefinidos, así que no puedo contestar a cualquier tema como una IA completa. Puedes pedirme la hora, la fecha, un chiste, un consejo, una búsqueda o que abra una aplicación. Para conversar libremente habrá que conectar una IA online de forma segura.';
+ if(!r.startsWith('Abriendo'))addBubble(r);speak(r);
+ // Keep navigation in the same tab; delay gives speech a chance to start, but iOS may interrupt it.
+ if(appUrl)setTimeout(()=>{window.location.href=appUrl;},250);
+}
+$('chatForm').addEventListener('submit',e=>{e.preventDefault();const v=$('command').value.trim();if(!v)return;addBubble(v,'user');$('command').value='';answer(v);});
+
+let rec=null, listening=false, restarting=false, recognitionBusy=false, restartTimer=null;
+function setListeningUI(on){
+ $('status').textContent=on?'● ESCUCHA ACTIVA':'● EN ESPERA';
+ $('orb').classList.toggle('listening',on);
+ $('listen').textContent=on?'🎙️ Escucha automática activa':'🎙️ Empezar conversación';
+}
+function scheduleRecognitionRestart(delay=500){
+ if(!listening||restarting)return;
+ clearTimeout(restartTimer);restarting=true;
+ restartTimer=setTimeout(()=>{restarting=false;if(listening&&!recognitionBusy)startRecognition();},delay);
+}
+function startRecognition(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){listening=false;setListeningUI(false);addBubble('El reconocimiento de voz no está disponible en este navegador. Usa Safari actualizado o escribe tu mensaje.','jarvis');return;}
+ if(!listening||recognitionBusy)return;
+ try{
+  rec=new SR(); rec.lang='es-ES'; rec.interimResults=false; rec.maxAlternatives=1; rec.continuous=false;
+  rec.onstart=()=>{recognitionBusy=true;setListeningUI(true);};
+  rec.onresult=e=>{
+   const heard=e.results[e.results.length-1][0].transcript.trim();
+   if(!heard)return;
+   // Accept ordinary speech, with or without saying “Jarvis”.
+   const normalized=heard.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+   const wake=normalized.match(/^\s*jarvis[\s,.:;-]*(.*)$/);
+   const command=(wake?wake[1]:heard).trim();
+   addBubble(heard,'user');
+   if(!command){speak('Te escucho, amigo. ¿Qué necesitas?');return;}
+   answer(command);
+  };
+  rec.onerror=e=>{
+   if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+    listening=false;setListeningUI(false);addBubble('Activa el permiso del micrófono para este sitio en Safari.','jarvis');
+   }
+  };
+  rec.onend=()=>{recognitionBusy=false;rec=null;if(listening&&!restarting)scheduleRecognitionRestart(650);else if(!listening)setListeningUI(false);};
+  rec.start();
+ }catch(e){recognitionBusy=false;rec=null;if(listening)scheduleRecognitionRestart(1000);}
+}
+$('listen').addEventListener('click',()=>{
+ if(listening)return;
+ listening=true;setListeningUI(true);startRecognition();
+});
+$('stop').addEventListener('click',()=>{
+ listening=false;restarting=false;recognitionBusy=false;clearTimeout(restartTimer);
+ if(rec){try{rec.onend=null;rec.stop();}catch(e){}rec=null;}
+ if('speechSynthesis'in window)window.speechSynthesis.cancel();
+ setListeningUI(false);
+});
+$('weather').addEventListener('click',()=>window.open('https://www.google.com/search?q='+encodeURIComponent('tiempo hoy'),'_blank','noopener'));
+$('webSearch').addEventListener('click',()=>window.open('https://www.google.com/','_blank','noopener'));
+if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&'speechSynthesis'in window){try{window.speechSynthesis.resume();}catch(e){}}});
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+function enterCallMode(){
+ callMode=true;document.body.classList.add('call-mode');setCallStatus('Preparando voz…');
+ // Start speech from the button gesture, which is more reliable in iOS Safari.
+ speak('Hola, soy JARVIS. Ya estoy aquí. Te escucho.');
+ if(!listening){listening=true;setListeningUI(true);startRecognition();}
+}
+$('testVoice').addEventListener('click',()=>{callMode=true;document.body.classList.add('call-mode');speak('Hola. Esta es mi voz. ¿Me escuchas bien?');});
+function leaveCallMode(){callMode=false;document.body.classList.remove('call-mode');document.body.style.background='#000';try{$('stop').click();}catch(e){}setCallStatus('Llamada finalizada');}
+$('startCall').addEventListener('click',enterCallMode);
+$('endCall').addEventListener('click',leaveCallMode);
+</script>
+</body></html>
